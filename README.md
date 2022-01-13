@@ -1,6 +1,6 @@
 # CloverMerge
 
-
+**_This fork its updated to PHP8.0._**
 
 PHP utility to merge two or more clover files into a single document.
 
