@@ -1,7 +1,7 @@
 {
     "name": "kavinsky/clover-merge",
     "description": "Merge two or more clover XML files.",
-    "type": "project",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -11,8 +11,10 @@
     ],
     "require": {
         "php": "^8.0|^8.1",
-        "vanilla/garden-cli": "^3.1",
-        "php-ds/php-ds": "^v1.4.0"
+        "ext-simplexml": "*",
+        "php-ds/php-ds": "^v1.4.0",
+        "symfony/filesystem": "^5.3",
+        "symfony/console": "^5.3"
     },
     "require-dev": {
         "kahlan/kahlan": "^5.1.3",
