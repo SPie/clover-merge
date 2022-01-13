@@ -1,8 +1,6 @@
 # CloverMerge
 
-[![Build Status](https://travis-ci.org/d0x2f/CloverMerge.svg?branch=master)](https://travis-ci.org/d0x2f/CloverMerge)
-[![Coverage Status](https://coveralls.io/repos/github/d0x2f/CloverMerge/badge.svg?branch=master)](https://coveralls.io/github/d0x2f/CloverMerge?branch=master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/7ff86933961de446d594/maintainability)](https://codeclimate.com/github/d0x2f/CloverMerge/maintainability)
+
 
 PHP utility to merge two or more clover files into a single document.
 
@@ -17,7 +15,7 @@ I spent a weekend writing this so you don't have to.
 Requires composer.
 
 ```bash
-$ git clone https://github.com/d0x2f/CloverMerge.git
+$ git clone https://github.com/kavinsky/CloverMerge.git
 $ composer install
 ```
 

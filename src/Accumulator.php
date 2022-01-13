@@ -1,6 +1,6 @@
 <?php
 
-namespace d0x2f\CloverMerge;
+namespace Kavinsky\CloverMerge;
 
 /**
  * Provides a parsing context and methods to build merged coverage state.

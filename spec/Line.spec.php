@@ -1,8 +1,8 @@
 <?php
 
-namespace d0x2f\CloverMerge\Spec;
+namespace Kavinsky\CloverMerge\Spec;
 
-use d0x2f\CloverMerge\Line;
+use Kavinsky\CloverMerge\Line;
 
 /**
  * @phan-closure-scope \Kahlan\Scope

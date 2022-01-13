@@ -1,10 +1,10 @@
 <?php
 
-namespace d0x2f\CloverMerge\Spec;
+namespace Kavinsky\CloverMerge\Spec;
 
-use d0x2f\CloverMerge\File;
-use d0x2f\CloverMerge\Utilities;
-use d0x2f\CloverMerge\Metrics;
+use Kavinsky\CloverMerge\File;
+use Kavinsky\CloverMerge\Utilities;
+use Kavinsky\CloverMerge\Metrics;
 
 /**
  * @phan-closure-scope \Kahlan\Scope

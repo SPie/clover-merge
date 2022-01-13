@@ -1,11 +1,11 @@
 <?php
 
-namespace d0x2f\CloverMerge\Spec;
+namespace Kavinsky\CloverMerge\Spec;
 
-use d0x2f\CloverMerge\Invocation;
-use d0x2f\CloverMerge\Accumulator;
-use d0x2f\CloverMerge\Utilities;
-use d0x2f\CloverMerge\Metrics;
+use Kavinsky\CloverMerge\Invocation;
+use Kavinsky\CloverMerge\Accumulator;
+use Kavinsky\CloverMerge\Utilities;
+use Kavinsky\CloverMerge\Metrics;
 
 /**
  * @phan-closure-scope \Kahlan\Scope
@@ -23,7 +23,7 @@ describe('Invocation', function () {
             });
 
             it('produces an invocation instance.', function () {
-                expect($this->invocation)->toBeAnInstanceOf('d0x2f\CloverMerge\Invocation');
+                expect($this->invocation)->toBeAnInstanceOf('Kavinsky\CloverMerge\Invocation');
             });
         });
         context('Receives an empty cli argument list.', function () {
@@ -67,7 +67,7 @@ describe('Invocation', function () {
             });
 
             it('throws an error.', function () {
-                expect($this->closure)->toThrow("At least one input path is required (preferably two).");
+                expect($this->closure)->toThrow("Missing required arg: paths");
             });
         });
         context('Receives a cli argument list containing a list of files to merge.', function () {

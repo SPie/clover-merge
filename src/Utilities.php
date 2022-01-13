@@ -1,6 +1,6 @@
 <?php
 
-namespace d0x2f\CloverMerge;
+namespace Kavinsky\CloverMerge;
 
 /**
  * Utility functions.
@@ -15,7 +15,7 @@ class Utilities
      * @param \Ds\Vector $paths
      * @return boolean
      */
-    public static function filesExist(\Ds\Vector $paths) : bool
+    public static function filesExist(\Ds\Set $paths) : bool
     {
         return $paths->reduce(
             function (bool $carry, string $path) : bool {

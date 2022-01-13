@@ -1,6 +1,6 @@
 <?php
 
-namespace d0x2f\CloverMerge;
+namespace Kavinsky\CloverMerge;
 
 class FileException extends \Exception
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace d0x2f\CloverMerge;
+namespace Kavinsky\CloverMerge;
 
 use Garden\Cli\Cli;
 
@@ -69,7 +69,7 @@ class Invocation
         // add support for the map method.
         // https://github.com/php-ds/extension/commit/ae9ce662360e9f93b4b6c7abb78b938672be1abc
         // $paths = new \Ds\Set($arguments->getArgs());
-        $paths = new \Ds\Vector(array_values(array_unique($arguments->getArgs())));
+        $paths = new \Ds\Set($arguments->getArgs());
 
         if ($paths->count() === 0) {
             throw new ArgumentException('At least one input path is required (preferably two).');

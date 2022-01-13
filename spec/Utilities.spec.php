@@ -1,8 +1,8 @@
 <?php
 
-namespace d0x2f\CloverMerge\Spec;
+namespace Kavinsky\CloverMerge\Spec;
 
-use d0x2f\CloverMerge\Utilities;
+use Kavinsky\CloverMerge\Utilities;
 use Kahlan\Plugin\Double;
 
 /**
@@ -14,7 +14,7 @@ describe('Utilities', function () {
         context('Receives a list of paths containing a non existant file first.', function () {
             beforeEach(function () {
                 allow('is_file')->toBeCalled()->andReturn(false, true, true);
-                $this->result = Utilities::filesExist(new \Ds\Vector(['no', 'yes', 'also yes']));
+                $this->result = Utilities::filesExist(new \Ds\Set(['no', 'yes', 'also yes']));
             });
 
             it('returns false.', function () {
@@ -25,7 +25,7 @@ describe('Utilities', function () {
         context('Receives a list of paths containing a non existant file last.', function () {
             beforeEach(function () {
                 allow('is_file')->toBeCalled()->andReturn(true, true, false);
-                $this->result = Utilities::filesExist(new \Ds\Vector(['yes', 'also yes', 'no']));
+                $this->result = Utilities::filesExist(new \Ds\Set(['yes', 'also yes', 'no']));
             });
 
             it('returns false.', function () {
@@ -36,7 +36,7 @@ describe('Utilities', function () {
         context('Receives a list of paths containing no missing files.', function () {
             beforeEach(function () {
                 allow('is_file')->toBeCalled()->andReturn(true, true, true);
-                $this->result = Utilities::filesExist(new \Ds\Vector(['yes', 'also yes', 'yes again']));
+                $this->result = Utilities::filesExist(new \Ds\Set(['yes', 'also yes', 'yes again']));
             });
 
             it('returns true.', function () {

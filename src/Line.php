@@ -1,6 +1,6 @@
 <?php
 
-namespace d0x2f\CloverMerge;
+namespace Kavinsky\CloverMerge;
 
 /**
  * Represents a single lines coverage information.

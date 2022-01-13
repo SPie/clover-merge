@@ -1,5 +1,5 @@
 {
-    "name": "d0x2f/clover-merge",
+    "name": "kavinsky/clover-merge",
     "description": "Merge two or more clover XML files.",
     "type": "project",
     "license": "MIT",
@@ -10,26 +10,26 @@
         }
     ],
     "require": {
-        "vanilla/garden-cli": "^2.1",
-        "php-ds/php-ds": "^1.2"
+        "vanilla/garden-cli": "^3.1",
+        "php-ds/php-ds": "^v1.4.0"
     },
     "require-dev": {
-        "kahlan/kahlan": "^4.2",
-        "phan/phan": "^1.0",
-        "squizlabs/php_codesniffer": "^3.3",
-        "php-coveralls/php-coveralls": "^2.1",
-        "sebastianfeldmann/captainhook": "^2.1"
+        "kahlan/kahlan": "^5.1.3",
+        "phan/phan": "^5.3.1",
+        "squizlabs/php_codesniffer": "^3.6.2",
+        "php-coveralls/php-coveralls": "^v2.5.2",
+        "captainhook/captainhook": "^5.10"
     },
     "autoload": {
         "psr-4": {
-            "d0x2f\\CloverMerge\\": "src/"
+            "Kavinsky\\CloverMerge\\": "src/"
         }
     },
     "scripts": {
         "test": "./vendor/bin/kahlan",
         "phan": "env PHAN_DISABLE_XDEBUG_WARN=1 ./vendor/bin/phan",
         "sniff": "./vendor/bin/phpcs",
-        "post-install-cmd": "\\SebastianFeldmann\\CaptainHook\\Composer\\Cmd::install"
+        "post-install-cmd": "\\CaptainHook\\CaptainHook\\Composer\\Cmd::install"
     },
     "suggest": {
         "ext-ds": "to improve performance and reduce memory usage"
