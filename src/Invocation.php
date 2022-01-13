@@ -65,10 +65,6 @@ class Invocation
             throw new ArgumentException('Merge option must be one of: additive, exclusive or inclusive.');
         }
 
-        // Using a set removes duplicates but we need to wait for the next ds realease to
-        // add support for the map method.
-        // https://github.com/php-ds/extension/commit/ae9ce662360e9f93b4b6c7abb78b938672be1abc
-        // $paths = new \Ds\Set($arguments->getArgs());
         $paths = new \Ds\Set($arguments->getArgs());
 
         if ($paths->count() === 0) {
