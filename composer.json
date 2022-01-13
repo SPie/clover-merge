@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "php": "^8.0|^8.1",
         "vanilla/garden-cli": "^3.1",
         "php-ds/php-ds": "^v1.4.0"
     },
@@ -29,7 +30,7 @@
         "test": "./vendor/bin/kahlan",
         "phan": "env PHAN_DISABLE_XDEBUG_WARN=1 ./vendor/bin/phan",
         "sniff": "./vendor/bin/phpcs",
-        "post-install-cmd": "\\CaptainHook\\CaptainHook\\Composer\\Cmd::install"
+        "post-autoload-dump": "vendor/bin/captainhook install -f -s"
     },
     "suggest": {
         "ext-ds": "to improve performance and reduce memory usage"
