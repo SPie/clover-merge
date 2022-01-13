@@ -20,7 +20,7 @@ $ composer require kavinsky/clover-merge
 ## Run
 
 ```bash
-$ ./vendor/bin/clover-merge -o combined.xml input1.xml input2.xml
+$ ./vendor/bin/clover-merge merge -o combined.xml input1.xml input2.xml
 Files Discovered: 332
 Final Coverage: 14534/14558 (99.84%)
 ```
@@ -28,7 +28,7 @@ Final Coverage: 14534/14558 (99.84%)
 # Usage
 
 ```
-usage: clover-merge [<options>] [<args>]
+usage: clover-merge merge [<options>] [<args>]
 
 OPTIONS
   --enforce, -e   Exit with failure if final coverage is below the given
