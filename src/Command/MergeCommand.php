@@ -42,7 +42,7 @@ class MergeCommand extends Command
             )
             ->addArgument(
                 'paths',
-                InputArgument::IS_ARRAY | InputArgument::REQUIRED,
+                InputArgument::IS_ARRAY,
                 'Input file paths'
             );
     }
@@ -65,6 +65,10 @@ class MergeCommand extends Command
         );
 
         // Output
+        if (empty($input->getOption('output'))) {
+            throw new \InvalidArgumentException('Missing required option: output');
+        }
+
         [$xml, $metrics] = $accumulator->toXml();
         $write_result = file_put_contents($input->getOption('output'), $xml);
         if ($write_result === false) {
@@ -83,22 +87,31 @@ class MergeCommand extends Command
             $coverage_percentage = 100 * $covered_element_count/$element_count;
         }
 
-        $output->writeln(sprintf("Files Discovered: %d\n", $files_discovered));
-        $output->writeln(sprintf("Final Coverage: %d/%d (%.2f%%)\n", $covered_element_count, $element_count, $coverage_percentage));
+        $output->writeln(sprintf("Files Discovered: %d", $files_discovered));
+        $output->writeln(
+            sprintf(
+                "Final Coverage: %d/%d (%.2f%%)",
+                $covered_element_count,
+                $element_count,
+                $coverage_percentage
+            )
+        );
         $success = $coverage_percentage > $coverage_threshold;
         if ($coverage_threshold > 0) {
             if ($success) {
                 $output->writeln(sprintf(
-                    "Coverage is above required threshold (%.2f%% > %.2f%%).\n",
+                    "Coverage is above required threshold (%.2f%% > %.2f%%).",
                     $coverage_percentage,
                     $coverage_threshold
                 ));
             } else {
                 $output->writeln(sprintf(
-                    "Coverage is below required threshold (%.2f%% < %.2f%%).\n",
+                    "Coverage is below required threshold (%.2f%% < %.2f%%).",
                     $coverage_percentage,
                     $coverage_threshold
                 ));
+
+                return Command::FAILURE;
             }
         }
         return Command::SUCCESS;

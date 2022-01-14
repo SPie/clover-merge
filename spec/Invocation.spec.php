@@ -2,10 +2,16 @@
 
 namespace Kavinsky\CloverMerge\Spec;
 
+use Kavinsky\CloverMerge\Command\MergeCommand;
+use Kavinsky\CloverMerge\Console\Application;
 use Kavinsky\CloverMerge\Invocation;
 use Kavinsky\CloverMerge\Accumulator;
 use Kavinsky\CloverMerge\Utilities;
 use Kavinsky\CloverMerge\Metrics;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * @phan-closure-scope \Kahlan\Scope
@@ -19,28 +25,40 @@ describe('Invocation', function () {
                 allow('simplexml_load_file')->toBeCalled()->andReturn(
                     new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><coverage/>')
                 );
-                $this->invocation = new Invocation(['prog', '-o', 'test', 'path', 'path2']);
+                $this->invocation = new MergeCommand();
             });
 
             it('produces an invocation instance.', function () {
-                expect($this->invocation)->toBeAnInstanceOf('Kavinsky\CloverMerge\Invocation');
+                expect($this->invocation)->toBeAnInstanceOf('Kavinsky\CloverMerge\Command\MergeCommand');
             });
         });
         context('Receives an empty cli argument list.', function () {
             beforeEach(function () {
                 $this->closure = function () {
-                    new Invocation([]);
+                    $cmd = new MergeCommand();
+                    $cmd->run(new ArgvInput([]), new BufferedOutput());
                 };
             });
 
             it('throws an error.', function () {
-                expect($this->closure)->toThrow();
+                expect($this->closure)->toThrow('At least one input path is required (preferably two).');
             });
         });
         context('Receives a cli argument list missing the output option.', function () {
             beforeEach(function () {
                 $this->closure = function () {
-                    new Invocation(['prog', 'file']);
+                    $cmd = new MergeCommand();
+
+                    $input = new ArgvInput(
+                        [
+                            'merge',
+                            'spec/fixtures/empty-file-with-package.xml',
+                            'spec/fixtures/empty-file-without-package.xml'
+                        ],
+                        $cmd->getDefinition()
+                    );
+
+                    $cmd->run($input, new BufferedOutput());
                 };
             });
 
@@ -51,7 +69,21 @@ describe('Invocation', function () {
         context('Receives a cli argument list with an invalid mode option.', function () {
             beforeEach(function () {
                 $this->closure = function () {
-                    new Invocation(['prog', '-o', 'test', '-m', 'bogus', 'file']);
+                    $cmd = new MergeCommand();
+
+                    $input = new ArgvInput(
+                        [
+                            'merge',
+                            '-o',
+                            'test',
+                            '-m',
+                            'bogus',
+                            'file'
+                        ],
+                        $cmd->getDefinition()
+                    );
+
+                    $cmd->run($input, new BufferedOutput());
                 };
             });
 
@@ -62,12 +94,23 @@ describe('Invocation', function () {
         context('Receives a cli argument list without any filenames given.', function () {
             beforeEach(function () {
                 $this->closure = function () {
-                    new Invocation(['prog', '-o', 'test']);
+                    $cmd = new MergeCommand();
+
+                    $input = new ArgvInput(
+                        [
+                            'merge',
+                            '-o',
+                            'test'
+                        ],
+                        $cmd->getDefinition()
+                    );
+
+                    $cmd->run($input, new BufferedOutput());
                 };
             });
 
             it('throws an error.', function () {
-                expect($this->closure)->toThrow("Missing required arg: paths");
+                expect($this->closure)->toThrow("At least one input path is required (preferably two).");
             });
         });
         context('Receives a cli argument list containing a list of files to merge.', function () {
@@ -75,7 +118,20 @@ describe('Invocation', function () {
                 beforeEach(function () {
                     allow('is_file')->toBeCalled()->andReturn(false);
                     $this->closure = function () {
-                        new Invocation(['prog', '-o', 'test', 'file', 'names']);
+                        $cmd = new MergeCommand();
+
+                        $input = new ArgvInput(
+                            [
+                                'merge',
+                                '-o',
+                                'test',
+                                'file',
+                                'names'
+                            ],
+                            $cmd->getDefinition()
+                        );
+
+                        $cmd->run($input, new BufferedOutput());
                     };
                 });
 
@@ -89,7 +145,15 @@ describe('Invocation', function () {
                     allow('is_file')->toBeCalled()->andReturn(true);
                     allow('simplexml_load_file')->toBeCalled()->andReturn(false);
                     $this->closure = function () {
-                        new Invocation(['prog', '-o', 'test', 'file', 'names']);
+                        $cmd = new MergeCommand();
+                        $input = new ArgvInput(
+                            [
+                                'merge', '-o', 'test', 'file', 'names'
+                            ],
+                            $cmd->getDefinition()
+                        );
+
+                        $cmd->run($input, new BufferedOutput());
                     };
                 });
 
@@ -105,16 +169,21 @@ describe('Invocation', function () {
                 beforeEach(function () {
                     $fixtures = glob(__DIR__.'/fixtures/*.xml');
                     assert(is_array($fixtures));
-                    $invocation = new Invocation(array_merge(
-                        [
-                            'prog',
+
+                    $cmd = new MergeCommand();
+                    $input = new ArgvInput(
+                        array_merge([
+                            'merge',
                             '-o', __DIR__.'/../test_output/fixtures_result.xml'
-                        ],
-                        $fixtures
-                    ));
-                    $this->closure = function () use ($invocation) {
-                        $invocation->execute();
+                        ], $fixtures),
+                        $cmd->getDefinition()
+                    );
+
+                    $this->closure = function () use ($cmd, $input) {
+                        $this->output = new BufferedOutput();
+                        $cmd->run($input, $this->output);
                     };
+
 
                     allow(Utilities::class)->toReceive('::logWarning')->andReturn();
                     allow('file_put_contents')->toBeCalled();
@@ -128,7 +197,8 @@ describe('Invocation', function () {
                 });
 
                 it('Prints the coverage stats.', function () {
-                    expect($this->closure)->toEcho("Files Discovered: 4\nFinal Coverage: 17/24 (70.83%)\n");
+                    $this->closure();
+                    expect($this->output->fetch())->toBe("Files Discovered: 4\nFinal Coverage: 17/24 (70.83%)\n");
                 });
             });
             context('With an unsatisfied minimum coverage threshold.', function () {
@@ -136,24 +206,31 @@ describe('Invocation', function () {
                     allow(Utilities::class)->toReceive('::logWarning')->andReturn();
                     allow('file_put_contents')->toBeCalled();
 
-                    $invocation = new Invocation([
-                        'prog',
-                        '-o', __DIR__.'/../test_output/fixtures_result.xml',
-                        '-e', '90.0',
-                        __DIR__.'/fixtures/file-without-package.xml'
-                    ]);
-                    $this->closure = function () use ($invocation) {
-                        return $invocation->execute();
+                    $cmd = new MergeCommand();
+                    $input = new ArgvInput(
+                        [
+                            'merge',
+                            '-o', __DIR__.'/../test_output/fixtures_result.xml',
+                            '--enforce', '90.0',
+                            __DIR__.'/fixtures/file-without-package.xml'
+                        ],
+                        $cmd->getDefinition()
+                    );
+
+                    $this->closure = function () use ($cmd, $input) {
+                        $this->output = new BufferedOutput();
+                        return $cmd->run($input, $this->output);
                     };
                 });
 
                 it('Returns false.', function () {
                     allow('printf')->toBeCalled();
-                    expect($this->closure())->toBe(false);
+                    expect($this->closure())->toBe(Command::FAILURE);
                 });
 
                 it('Prints the coverage stats.', function () {
-                    expect($this->closure)->toEcho(
+                    $this->closure();
+                    expect($this->output->fetch())->toBe(
                         "Files Discovered: 1\n" .
                         "Final Coverage: 4/5 (80.00%)\n" .
                         "Coverage is below required threshold (80.00% < 90.00%).\n"
@@ -165,24 +242,28 @@ describe('Invocation', function () {
                     allow(Utilities::class)->toReceive('::logWarning')->andReturn();
                     allow('file_put_contents')->toBeCalled();
 
-                    $invocation = new Invocation([
-                        'prog',
+                    $cmd = new MergeCommand();
+
+                    $input = new ArgvInput([
+                        'merge',
                         '-o', __DIR__.'/../test_output/fixtures_result.xml',
                         '-e', '50.0',
                         __DIR__.'/fixtures/file-without-package.xml'
                     ]);
-                    $this->closure = function () use ($invocation) {
-                        return $invocation->execute();
+                    $this->closure = function () use ($cmd, $input) {
+                        $this->output = new BufferedOutput();
+                        return $cmd->run($input, $this->output);
                     };
                 });
 
                 it('Returns false.', function () {
-                    allow('printf')->toBeCalled();
-                    expect($this->closure())->toBe(true);
+                    expect($this->closure())->toBe(Command::SUCCESS);
                 });
 
                 it('Prints the coverage stats.', function () {
-                    expect($this->closure)->toEcho(
+                    $this->closure();
+
+                    expect($this->output->fetch())->toBe(
                         "Files Discovered: 1\n" .
                         "Final Coverage: 4/5 (80.00%)\n" .
                         "Coverage is above required threshold (80.00% > 50.00%).\n"
@@ -198,9 +279,12 @@ describe('Invocation', function () {
                 );
                 allow(Accumulator::class)->toReceive('parseAll')->andReturn();
                 allow(Accumulator::class)->toReceive('toXml')->andReturn([new \Ds\Map(), new Metrics()]);
-                $this->invocation = new Invocation(['prog', '-o', 'test', 'path', 'path2']);
+
+                $this->input = new ArgvInput(['prog', '-o', 'test', 'path', 'path2']);
+                $this->output = new BufferedOutput();
                 $this->closure = function () {
-                    $this->invocation->execute();
+                    $cmd = new MergeCommand();
+                    $cmd->run($this->input, $this->output);
                 };
             });
             context('Executes an invocation instance where the output file is readable.', function () {
@@ -208,18 +292,21 @@ describe('Invocation', function () {
                     allow('file_put_contents')->toBeCalled()->andReturn(100);
                 });
                 it('delegates to Accumulator::parseAll.', function () {
-                    expect($this->closure)->toEcho("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
+                    $this->closure();
+                    expect($this->output->fetch())->toBe("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
                     expect(Accumulator::class)->toReceive('parseAll');
                 });
                 it('delegates to Accumulator::toXml.', function () {
-                    expect($this->closure)->toEcho("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
+                    $this->closure();
+                    expect($this->output->fetch())->toBe("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
                     expect(Accumulator::class)->toReceive('toXml');
                 });
                 it('writes to the output file.', function () {
                     expect('file_put_contents')->toBeCalled()->with(
                         'test'
                     )->once();
-                    expect($this->closure)->toEcho("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
+                    $this->closure();
+                    expect($this->output->fetch())->toBe("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
                 });
             });
             context('Executes an invocation instance where the output file in unreadable.', function () {

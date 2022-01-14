@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+use Kavinsky\CloverMerge\Command\MergeCommand;
+use Symfony\Component\Console\Application;
+
 $loaded = false;
 
 $files = [
@@ -24,6 +27,26 @@ if (!$loaded) {
     );
 }
 
+$application = new class extends Application
+{
+    public function __construct()
+    {
+        parent::__construct('CloverMerge', '2.0.0');
+    }
 
-$application = new Kavinsky\CloverMerge\Console\Application();
+    /**
+     * Gets the default commands that should always be available.
+     *
+     * @return \Symfony\Component\Console\Command\Command[] An array of default Command instances
+     * @throws \Symfony\Component\Console\Exception\LogicException
+     */
+    public function getDefaultCommands()
+    {
+        return [
+            ...parent::getDefaultCommands(),
+            new MergeCommand(),
+        ];
+    }
+};
+
 $application->run();
