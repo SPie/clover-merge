@@ -198,7 +198,10 @@ describe('Invocation', function () {
 
                 it('Prints the coverage stats.', function () {
                     $this->closure();
-                    expect($this->output->fetch())->toBe("Files Discovered: 4\nFinal Coverage: 17/24 (70.83%)\n");
+                    expect($this->output->fetch())->toBe(
+                        "Files Discovered: 4".PHP_EOL.
+                        "Final Coverage: 17/24 (70.83%)".PHP_EOL
+                    );
                 });
             });
             context('With an unsatisfied minimum coverage threshold.', function () {
@@ -231,9 +234,9 @@ describe('Invocation', function () {
                 it('Prints the coverage stats.', function () {
                     $this->closure();
                     expect($this->output->fetch())->toBe(
-                        "Files Discovered: 1\n" .
-                        "Final Coverage: 4/5 (80.00%)\n" .
-                        "Coverage is below required threshold (80.00% < 90.00%).\n"
+                        "Files Discovered: 1" . PHP_EOL .
+                        "Final Coverage: 4/5 (80.00%)" . PHP_EOL .
+                        "Coverage is below required threshold (80.00% < 90.00%)." . PHP_EOL
                     );
                 });
             });
@@ -264,9 +267,9 @@ describe('Invocation', function () {
                     $this->closure();
 
                     expect($this->output->fetch())->toBe(
-                        "Files Discovered: 1\n" .
-                        "Final Coverage: 4/5 (80.00%)\n" .
-                        "Coverage is above required threshold (80.00% > 50.00%).\n"
+                        "Files Discovered: 1" . PHP_EOL .
+                        "Final Coverage: 4/5 (80.00%)" . PHP_EOL .
+                        "Coverage is above required threshold (80.00% > 50.00%)." . PHP_EOL
                     );
                 });
             });
@@ -293,12 +296,18 @@ describe('Invocation', function () {
                 });
                 it('delegates to Accumulator::parseAll.', function () {
                     $this->closure();
-                    expect($this->output->fetch())->toBe("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
+                    expect($this->output->fetch())->toBe(
+                        "Files Discovered: 0" . PHP_EOL .
+                        "Final Coverage: 0/0 (0.00%)" . PHP_EOL
+                    );
                     expect(Accumulator::class)->toReceive('parseAll');
                 });
                 it('delegates to Accumulator::toXml.', function () {
                     $this->closure();
-                    expect($this->output->fetch())->toBe("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
+                    expect($this->output->fetch())->toBe(
+                        "Files Discovered: 0" . PHP_EOL .
+                        "Final Coverage: 0/0 (0.00%)" . PHP_EOL
+                    );
                     expect(Accumulator::class)->toReceive('toXml');
                 });
                 it('writes to the output file.', function () {
@@ -306,7 +315,10 @@ describe('Invocation', function () {
                         'test'
                     )->once();
                     $this->closure();
-                    expect($this->output->fetch())->toBe("Files Discovered: 0\nFinal Coverage: 0/0 (0.00%)\n");
+                    expect($this->output->fetch())->toBe(
+                        "Files Discovered: 0" . PHP_EOL .
+                        "Final Coverage: 0/0 (0.00%)" . PHP_EOL
+                    );
                 });
             });
             context('Executes an invocation instance where the output file in unreadable.', function () {
