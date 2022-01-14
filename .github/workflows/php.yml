@@ -45,7 +45,7 @@ jobs:
         run: vendor/bin/phpcs
 
       - name: Create test folder
-        run: mkdir test_folder
+        run: mkdir test_output
 
       - name: Test with Kahlan
         run: vendor/bin/kahlan
