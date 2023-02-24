@@ -40,7 +40,7 @@ $application = new class extends Application
      * @return \Symfony\Component\Console\Command\Command[] An array of default Command instances
      * @throws \Symfony\Component\Console\Exception\LogicException
      */
-    public function getDefaultCommands()
+    public function getDefaultCommands(): array
     {
         return [
             ...parent::getDefaultCommands(),
