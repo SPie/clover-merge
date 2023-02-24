@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "8.0.*",
+        "php": "^8.0.*",
         "ext-simplexml": "*",
         "php-ds/php-ds": "^v1.4.0",
         "symfony/filesystem": "^6.0",
