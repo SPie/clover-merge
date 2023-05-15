@@ -5,10 +5,9 @@
             {
                 "action": "\\CaptainHook\\App\\Hook\\Message\\Action\\Beams",
                 "options": {
-                    "subjectLength": 50,
-                    "bodyLineLength": 72
-                },
-                "conditions": []
+                    "subjectLength": 80,
+                    "bodyLineLength": 120
+                }
             }
         ]
     },
@@ -21,8 +20,7 @@
         "actions": [
             {
                 "action": "\\CaptainHook\\App\\Hook\\PHP\\Action\\Linting",
-                "options": [],
-                "conditions": []
+                "options": []
             }
         ]
     },
