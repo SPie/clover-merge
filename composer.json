@@ -1,5 +1,5 @@
 {
-    "name": "kavinsky/clover-merge",
+    "name": "synida/clover-merge",
     "description": "Merge two or more clover XML files.",
     "type": "library",
     "license": "MIT",
