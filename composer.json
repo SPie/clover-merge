@@ -16,6 +16,7 @@
     "require": {
         "php": "^8.0.0",
         "ext-simplexml": "*",
+        "php-ds/php-ds": "^v1.4.1",
         "symfony/filesystem": "^6.0",
         "symfony/console": "^6.0"
     },
@@ -38,8 +39,7 @@
         "post-autoload-dump": "vendor/bin/captainhook install -f -s"
     },
     "suggest": {
-        "ext-ds": "to improve performance and reduce memory usage",
-        "php-ds/php-ds": "^v1.4.1"
+        "ext-ds": "to improve performance and reduce memory usage"
     },
     "bin": [
         "clover-merge"
